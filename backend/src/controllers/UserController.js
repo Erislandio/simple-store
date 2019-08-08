@@ -1,4 +1,12 @@
 const User = require("../models/User");
+const authConfig = require("../config/auth.json");
+const jwt = require("jsonwebtoken");
+
+function generateToken(params = {}) {
+    return jwt.sign(params, authConfig.secret, {
+        expiresIn: 86400
+    });
+}
 
 module.exports = {
     async store(req, res) {
@@ -17,7 +25,12 @@ module.exports = {
 
             const newUser = await User.create(req.body);
 
-            return res.status(201).send(newUser);
+            newUser.password = undefined;
+
+            return res.status(201).send({
+                newUser,
+                token: generateToken({ id: newUser.email })
+            });
         } catch (error) {
             return res.status(500).send(error);
         }
