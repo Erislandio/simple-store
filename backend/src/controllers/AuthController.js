@@ -1,6 +1,6 @@
-import generateToken from "../helpers/generateToken";
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const { generateToken } = require("../helpers/generateToken");
 
 module.exports = {
     async authenticate(req, res) {
