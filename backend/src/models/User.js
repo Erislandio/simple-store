@@ -5,7 +5,8 @@ const UserSchema = new Schema(
         email: {
             type: String,
             required: true,
-            unique: true
+            unique: true,
+            lowercase: true
         },
         name: {
             type: String,
@@ -32,5 +33,12 @@ const UserSchema = new Schema(
         timestamps: true
     }
 );
+
+// UserSchema.pre("save", async function(next) {
+//     const hash = await bcrypt.hash(this.password, 10);
+//     this.password = hash;
+
+//     next();
+// });
 
 module.exports = model("User", UserSchema);
