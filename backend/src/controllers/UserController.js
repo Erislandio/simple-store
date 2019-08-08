@@ -1,12 +1,5 @@
+const { generateToken } = require("../helpers/generateToken");
 const User = require("../models/User");
-const authConfig = require("../config/auth.json");
-const jwt = require("jsonwebtoken");
-
-function generateToken(params = {}) {
-    return jwt.sign(params, authConfig.secret, {
-        expiresIn: 86400
-    });
-}
 
 module.exports = {
     async store(req, res) {
