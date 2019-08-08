@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const mongodbUri = `mongodb://@ds127843.mlab.com:27843/store`;
-const config = require("../env.json");
+const mongodbUri = `mongodb://:@ds259577.mlab.com:59577/store`;
+const config = require("../env");
 const chalk = require("chalk");
 
 mongoose.connect(mongodbUri, {
