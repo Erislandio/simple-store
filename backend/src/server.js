@@ -5,14 +5,11 @@ const chalk = require("chalk");
 const db = require("./database/db");
 const port = 3333;
 
+const routes = require("./routes/index");
+
 app.use(express.json());
 app.use(cors());
-
-app.get("/", (req, res, next) => {
-    return res.send({
-        ok: true
-    });
-});
+app.use(routes);
 
 app.listen(port, () => {
     console.log(chalk.bgCyan(`Server running in http://localhost:${port}/`));
