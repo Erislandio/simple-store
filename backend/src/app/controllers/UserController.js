@@ -39,11 +39,33 @@ module.exports = {
 
     async index(req, res) {
         try {
-            const users = await User.find();
-
+            const users = await User.find().select('-password')
             return res.status(200).send(users);
         } catch (error) {
             return res.status(500).send(error);
         }
+    },
+    async getUserByEmail(req, res) {
+        try {
+
+            const { body: { email } } = req
+
+            const user = await User.findOne({ email })
+
+            if (!user) {
+                return res.status(400).send({
+                    code: 2,
+                    message: "User not exists"
+                })
+            }
+
+            user.password = undefined
+
+            return res.status(200).send(user)
+
+        } catch (error) {
+            return res.status(500).send(error);
+        }
     }
+
 };
