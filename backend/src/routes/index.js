@@ -1,8 +1,8 @@
 const express = require("express");
 const routes = express.Router();
-const userController = require("../controllers/UserController");
-const authController = require("../controllers/AuthController");
-const auth = require('../middlewares/auth')
+const userController = require("../app/controllers/UserController");
+const authController = require("../app/controllers/AuthController");
+const auth = require('../app/middlewares/auth')
 
 routes.use('/user', auth)
 
