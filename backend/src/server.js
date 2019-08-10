@@ -3,7 +3,10 @@ const cors = require("cors");
 const app = express();
 const chalk = require("chalk");
 const db = require("./database/db");
-const port = 3334;
+const port = 3333;
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
+
 
 const routes = require("./routes/index");
 

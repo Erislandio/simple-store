@@ -15,9 +15,9 @@ routes.use('/category', auth)
 routes.post('/brand', auth)
 
 // * Users
-routes.post("/user", userController.store);
+routes.post("/user", multer(multerConfig).single("file"), userController.store);
 routes.get("/users", userController.index);
-routes.put("/user", userController.update);
+routes.put("/user", multer(multerConfig).single("file"), userController.update);
 routes.delete("/user", userController.delete);
 routes.get('/user', userController.getUserByEmail)
 
@@ -38,9 +38,9 @@ routes.get('/brand', brandController.index)
 // * files
 
 routes.use(
-    "/files",
-    express.static(path.resolve(__dirname, "..", "..", "tmp", "uploads"))
-  );
-  
+  "/files",
+  express.static(path.resolve(__dirname, "..", "..", "tmp", "uploads"))
+);
+
 
 module.exports = routes;
