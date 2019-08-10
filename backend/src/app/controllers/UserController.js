@@ -13,9 +13,9 @@ module.exports = {
     async store(req, res) {
         try {
             const {
-                body: { email, name, lastname, document, password, admin }
+                body: { email, name, lastname, document, password, admin },
+                file
             } = req;
-            const { originalname: nameFile, size, key, location: url = "" } = req.file;
 
             const user = await User.findOne({ email });
             if (user) {
@@ -25,13 +25,33 @@ module.exports = {
                 });
             }
 
+            if (file) {
+                const { originalname: nameFile, size, key, location: url = "" } = req.file;
+
+                const newUser = await User.create({
+                    image: {
+                        name: nameFile,
+                        size,
+                        key,
+                        url
+                    },
+                    name,
+                    lastname,
+                    document,
+                    password,
+                    admin,
+                    email
+                });
+
+                newUser.password = undefined;
+
+                return res.status(201).send({
+                    newUser,
+                    token: generateToken({ id: newUser.email })
+                });
+            }
+
             const newUser = await User.create({
-                image: {
-                    name: nameFile,
-                    size,
-                    key,
-                    url
-                },
                 name,
                 lastname,
                 document,
@@ -46,6 +66,7 @@ module.exports = {
                 newUser,
                 token: generateToken({ id: newUser.email })
             });
+
         } catch (error) {
             console.log(error)
             return res.status(500).send(error);

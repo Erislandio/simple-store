@@ -21,7 +21,6 @@ routes.put("/user", multer(multerConfig).single("file"), userController.update);
 routes.delete("/user", userController.delete);
 routes.get('/user', userController.getUserByEmail)
 
-
 // * Autenticação
 routes.post("/authenticate", authController.authenticate);
 routes.post("/login", authController.login);
@@ -33,10 +32,9 @@ routes.post('/category', categoryController.store)
 
 // * brand
 routes.post('/brand', multer(multerConfig).single("file"), brandController.store)
-routes.get('/brand', brandController.index)
+routes.get('/brands', brandController.index)
 
 // * files
-
 routes.use(
   "/files",
   express.static(path.resolve(__dirname, "..", "..", "tmp", "uploads"))
