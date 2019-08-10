@@ -33,6 +33,12 @@ module.exports = {
         } catch (error) {
             return res.status(500).send(error)
         }
-
+    },
+    async index(req, res) {
+        try {
+            
+        } catch (error) {
+            return ew
+        }
     }
 }

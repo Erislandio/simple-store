@@ -12,7 +12,7 @@ const path = require('path')
 routes.use('/user', auth)
 routes.use('/users', auth)
 routes.use('/category', auth)
-routes.use('/brand', auth)
+routes.post('/brand', auth)
 
 // * Users
 routes.post("/user", userController.store);
@@ -20,6 +20,7 @@ routes.get("/users", userController.index);
 routes.put("/user", userController.update);
 routes.delete("/user", userController.delete);
 routes.get('/user', userController.getUserByEmail)
+
 
 // * Autenticação
 routes.post("/authenticate", authController.authenticate);
@@ -32,6 +33,7 @@ routes.post('/category', categoryController.store)
 
 // * brand
 routes.post('/brand', multer(multerConfig).single("file"), brandController.store)
+routes.get('/brand', brandController.index)
 
 // * files
 
