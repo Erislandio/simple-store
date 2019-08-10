@@ -8,6 +8,7 @@ routes.use('/user', auth)
 
 routes.post("/user", userController.store);
 routes.get("/user", userController.index);
+routes.put("/user", userController.update);
 routes.get('/user:id', userController.getUserByEmail)
 routes.post("/authenticate", authController.authenticate);
 

@@ -66,6 +66,24 @@ module.exports = {
         } catch (error) {
             return res.status(500).send(error);
         }
+    },
+    async update(req, res) {
+
+        try {
+
+            const { body: { email } } = req
+
+            const update = await User.findOneAndUpdate(email, {
+                ...req.body
+            }, { new: true })
+
+            return res.status(201).send(update)
+
+        } catch (error) {
+            return res.status(500).send(error);
+
+        }
+
     }
 
 };
