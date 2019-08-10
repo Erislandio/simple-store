@@ -12,7 +12,14 @@
 
 ### rotas adicionadas 
 
-- User [get, create, update, delete]
-- Autenticação - geração de token JWT. (json web token)
+#### User 
+
+- [get, create, update, delete]
+
+#### Autenticação
+
+- geração de token JWT. (json web token)
+
+#### Categoria
 
 
