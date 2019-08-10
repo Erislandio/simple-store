@@ -26,4 +26,12 @@
 
 - adição dos campos de category
 
+#### Brand (marca)
+
+- [create, index] 
+- Adição do image upload.
+
+
+
+
 
