@@ -29,6 +29,7 @@ routes.post("/reset/token", authController.resendTokenPost);
 
 // * Category
 routes.post('/category', categoryController.store)
+routes.get('/categories', categoryController.index)
 
 // * brand
 routes.post('/brand', multer(multerConfig).single("file"), brandController.store)
