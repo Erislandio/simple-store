@@ -19,7 +19,11 @@
 #### Autenticação
 
 - geração de token JWT. (json web token)
+- adição de validação por token via email
+- nodemailer [sendgrid](https://app.sendgrid.com/)
 
 #### Categoria
+
+- adição dos campos de category
 
 
