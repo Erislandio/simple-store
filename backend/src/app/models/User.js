@@ -18,7 +18,7 @@ const UserSchema = new Schema(
         },
         document: {
             type: String,
-            required: true
+            required: false
         },
         password: {
             type: String,
@@ -27,7 +27,11 @@ const UserSchema = new Schema(
         admin: {
             type: Boolean,
             default: false
-        }
+        },
+        isVerified: {
+            type: Boolean,
+            default: false
+        },
     },
     {
         timestamps: true
