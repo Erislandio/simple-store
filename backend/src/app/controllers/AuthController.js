@@ -48,7 +48,7 @@ module.exports = {
     async login(req, res) {
 
         try {
-            const { body: { email } } = req
+            const { body: { email, name, lastname } } = req
 
             if (!validateEmail(email)) {
                 return res.send({
@@ -68,16 +68,16 @@ module.exports = {
                 user = new User(req.body);
 
                 user.save((err) => {
-                    if (err) { return res.status(500).send({ msg: err.message }); }
+                    if (err) { return res.status(500).send({ message: err.message }); }
                     const token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
 
                     token.save(function (err) {
-                        if (err) { return res.status(500).send({ msg: err.message }); }
+                        if (err) { return res.status(500).send({ message: err.message }); }
 
                         let transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: authToken.user, pass: authToken.pass } });
-                        let mailOptions = { from: 'no-reply@ebest.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+                        let mailOptions = { from: 'no-reply@ebest.com', to: user.email, subject: 'Account Verification Token', text: `Hello ${name} ${lastname}. <br /> You code is: ${token.token}` };
                         transporter.sendMail(mailOptions, (err) => {
-                            if (err) { return res.status(500).send({ msg: err.message }); }
+                            if (err) { return res.status(500).send({ message: err.message }); }
                             res.status(200).send({
                                 code: 200,
                                 message: `A verification email has been sent to ${user.email}`
@@ -90,27 +90,26 @@ module.exports = {
 
         } catch (error) {
             return res.status(500).send(error);
-
         }
     },
     async loginConfirmation(req, res) {
-
         const { body: { token: tokenUser } } = req
         try {
-
             Token.findOne({ token: tokenUser }, (err, token) => {
-                if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+                if (!token) return res.status(400).send({ type: 'not-verified', message: 'We were unable to find a valid token. Your token my have expired.' });
 
                 User.findOne({ _id: token._userId }, (err, user) => {
-                    if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
-                    if (user.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+                    if (!user) return res.status(400).send({ message: 'We were unable to find a user for this token.' });
+                    if (user.isVerified) return res.status(400).send({ type: 'already-verified', message: 'This user has already been verified.' });
 
                     user.isVerified = true;
+                    user.password = undefined
                     user.save((err) => {
-                        if (err) { return res.status(500).send({ msg: err.message }); }
+                        if (err) { return res.status(500).send({ message: err.message }); }
                         res.status(200).send({
                             code: 200,
-                            message: `The account has been verified. Please log in.`
+                            message: `The account has been verified. Please log in.`,
+                            user
                         });
                     });
                 });
@@ -122,27 +121,25 @@ module.exports = {
     async resendTokenPost(req, res) {
         try {
             const { body: { email } } = req
-
-            User.findOne({ email: req.body.email }, (err, user) => {
-                if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
-                if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
+            User.findOne({ email }, (err, user) => {
+                if (!user) return res.status(400).send({ message: 'We were unable to find a user with that email.', code: 1 });
+                if (user.isVerified) return res.status(200).send({ message: 'This account has already been verified. Please log in.' });
 
                 const token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
 
-                token.save(function (err) {
-                    if (err) { return res.status(500).send({ msg: err.message }); }
+                token.save((err) => {
+                    if (err) { return res.status(500).send({ message: err.message }); }
 
                     let transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: authToken.user, pass: authToken.pass } });
-                    let mailOptions = { from: 'no-reply@codemoto.io', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+                    let mailOptions = { from: 'no-reply@ebest.io', to: user.email, subject: 'Account Verification Token', text: `Hello ${name} ${lastname}. \n You code is: ${token.token}` };
                     transporter.sendMail(mailOptions, (err) => {
-                        if (err) { return res.status(500).send({ msg: err.message }); }
+                        if (err) { return res.status(500).send({ message: err.message }); }
                         res.status(200).send({
                             code: 200,
                             message: `A verification email has been sent to ${user.email}.`
                         });
                     });
                 });
-
             });
 
         } catch (error) {

@@ -20,7 +20,7 @@ routes.get('/user', userController.getUserByEmail)
 // * Autenticação
 routes.post("/authenticate", authController.authenticate);
 routes.post("/login", authController.login);
-routes.get("/confirmation", authController.loginConfirmation);
+routes.post("/confirmation", authController.loginConfirmation);
 routes.post("/reset/token", authController.resendTokenPost);
 
 // * Category
