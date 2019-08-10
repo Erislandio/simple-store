@@ -71,11 +71,11 @@ module.exports = {
 
         try {
 
-            const { body: { email } } = req
+            const { body: { email, name, lastname, document, admin } } = req
 
             const update = await User.findOneAndUpdate(email, {
-                ...req.body
-            }, { new: true })
+                name, lastname, document, admin
+            }).select('-password')
 
             return res.status(201).send(update)
 
