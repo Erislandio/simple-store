@@ -58,21 +58,25 @@ module.exports = {
             }
 
             User.findOne({ email }, (err, user) => {
- 
-                if (user) return res.status(400).send({ msg: 'The email address you have entered is already associated with another account.' });
+
+                if (user) return res.status(400).send({
+                    code: 3,
+                    message: 'The email address you have entered is already associated with another account.'
+                }
+                );
 
                 user = new User(req.body);
 
-                user.save( (err) => {
-                    if (err) { return res.status(500).send({ msg: err.message }); }             
+                user.save((err) => {
+                    if (err) { return res.status(500).send({ msg: err.message }); }
                     const token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
-             
+
                     token.save(function (err) {
                         if (err) { return res.status(500).send({ msg: err.message }); }
-             
-                        let transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user:  authToken.user, pass: authToken.pass } });
+
+                        let transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: authToken.user, pass: authToken.pass } });
                         let mailOptions = { from: 'no-reply@ebest.com', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
-                        transporter.sendMail(mailOptions, (err) =>  {
+                        transporter.sendMail(mailOptions, (err) => {
                             if (err) { return res.status(500).send({ msg: err.message }); }
                             res.status(200).send({
                                 code: 200,
@@ -81,13 +85,55 @@ module.exports = {
                         });
                     });
                 });
-              });
+            });
 
 
         } catch (error) {
             return res.status(500).send(error);
 
         }
+    },
+    async loginConfirmation(req, res) {
 
+        const { body: { token, email } } = req
+        try {
+
+            Token.findOne({ token: req.body.token }, (err, token) => {
+                if (!token) return res.status(400).send({ type: 'not-verified', msg: 'We were unable to find a valid token. Your token my have expired.' });
+
+                User.findOne({ _id: token._userId, email }, (err, user) => {
+                    if (!user) return res.status(400).send({ msg: 'We were unable to find a user for this token.' });
+                    if (user.isVerified) return res.status(400).send({ type: 'already-verified', msg: 'This user has already been verified.' });
+
+                    user.isVerified = true;
+                    user.save((err) => {
+                        if (err) { return res.status(500).send({ msg: err.message }); }
+                        res.status(200).send("The account has been verified. Please log in.");
+                    });
+                });
+            });
+        } catch (error) {
+            return res.status(500).send(error)
+        }
+    },
+    async resendTokenPost(req, res){
+        User.findOne({ email: req.body.email }, function (err, user) {
+            if (!user) return res.status(400).send({ msg: 'We were unable to find a user with that email.' });
+            if (user.isVerified) return res.status(400).send({ msg: 'This account has already been verified. Please log in.' });
+     
+            var token = new Token({ _userId: user._id, token: crypto.randomBytes(16).toString('hex') });
+     
+            token.save(function (err) {
+                if (err) { return res.status(500).send({ msg: err.message }); }
+     
+                let transporter = nodemailer.createTransport({ service: 'Sendgrid', auth: { user: authToken.user, pass: authToken.pass } });
+                let mailOptions = { from: 'no-reply@codemoto.io', to: user.email, subject: 'Account Verification Token', text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + token.token + '.\n' };
+                transporter.sendMail(mailOptions, (err) => {
+                    if (err) { return res.status(500).send({ msg: err.message }); }
+                    res.status(200).send('A verification email has been sent to ' + user.email + '.');
+                });
+            });
+     
+        });
     }
 };
