@@ -88,12 +88,10 @@ module.exports = {
         try {
 
             const { body: { email } } = req
+            const removed = await User.findOneAndDelete({ email }).select()
 
-
-            const removed = await User.findOneAndDelete({ email })
-
-            console.log(removed)
-
+            removed.password = undefined
+            
             return res.status(201).send({
                 removed
             })
