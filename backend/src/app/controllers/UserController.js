@@ -71,19 +71,38 @@ module.exports = {
 
         try {
 
-            const { body: { email, name, lastname, document, admin } } = req
+            const { body: { email } } = req
 
             const update = await User.findOneAndUpdate(email, {
-                name, lastname, document, admin
+                $set: req.body
             }).select('-password')
 
             return res.status(201).send(update)
 
         } catch (error) {
             return res.status(500).send(error);
-
         }
 
+    },
+    async delete(req, res) {
+        try {
+
+            const { body: { email } } = req
+
+
+            const removed = await User.findOneAndDelete({ email })
+
+            console.log(removed)
+
+            return res.status(201).send({
+                removed
+            })
+
+
+        } catch (error) {
+            return res.status(500).send(error);
+
+        }
     }
 
 };

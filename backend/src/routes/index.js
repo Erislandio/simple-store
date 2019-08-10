@@ -5,11 +5,14 @@ const authController = require("../app/controllers/AuthController");
 const auth = require('../app/middlewares/auth')
 
 routes.use('/user', auth)
+routes.use('/users', auth)
 
 routes.post("/user", userController.store);
-routes.get("/user", userController.index);
+routes.get("/users", userController.index);
 routes.put("/user", userController.update);
-routes.get('/user:id', userController.getUserByEmail)
+routes.delete("/user", userController.delete);
+routes.get('/user', userController.getUserByEmail)
+
 routes.post("/authenticate", authController.authenticate);
 
 module.exports = routes;
