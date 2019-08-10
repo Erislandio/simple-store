@@ -13,8 +13,9 @@ module.exports = {
     async store(req, res) {
         try {
             const {
-                body: { email }
+                body: { email, name, lastname, document, password, admin }
             } = req;
+            const { originalname: nameFile, size, key, location: url = "" } = req.file;
 
             const user = await User.findOne({ email });
             if (user) {
@@ -24,7 +25,20 @@ module.exports = {
                 });
             }
 
-            const newUser = await User.create(req.body);
+            const newUser = await User.create({
+                image: {
+                    name: nameFile,
+                    size,
+                    key,
+                    url
+                },
+                name,
+                lastname,
+                document,
+                password,
+                admin,
+                email
+            });
 
             newUser.password = undefined;
 
@@ -33,7 +47,9 @@ module.exports = {
                 token: generateToken({ id: newUser.email })
             });
         } catch (error) {
+            console.log(error)
             return res.status(500).send(error);
+
         }
     },
 
@@ -72,9 +88,17 @@ module.exports = {
         try {
 
             const { body: { email } } = req
+            const { originalname: nameFile, size, key, location: url = "" } = req.file;
 
             const update = await User.findOneAndUpdate(email, {
-                $set: req.body
+                $set: req.body, $set: {
+                    image: {
+                        name: nameFile,
+                        size,
+                        key,
+                        url
+                    }
+                }
             }).select('-password')
 
             return res.status(201).send(update)
@@ -91,7 +115,7 @@ module.exports = {
             const removed = await User.findOneAndDelete({ email }).select()
 
             removed.password = undefined
-            
+
             return res.status(201).send({
                 removed
             })

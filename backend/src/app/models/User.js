@@ -19,7 +19,8 @@ const UserSchema = new Schema(
         },
         document: {
             type: String,
-            required: false
+            required: false,
+            unique: true
         },
         password: {
             type: String,
@@ -45,7 +46,7 @@ const UserSchema = new Schema(
     }
 );
 
-UserSchema.pre("save", async (next) => {
+UserSchema.pre("save", async function (next) {
     const hash = await bcrypt.hash(this.password, 10);
     this.password = hash;
 
@@ -57,7 +58,7 @@ UserSchema.pre("save", async (next) => {
 });
 
 
-UserSchema.pre("remove", () => {
+UserSchema.pre("remove", function () {
     return promisify(fs.unlink)(
         path.resolve(__dirname, "..", "..", "tmp", "uploads", this.image.key)
     );

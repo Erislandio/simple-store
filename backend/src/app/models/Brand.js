@@ -27,13 +27,13 @@ const BrandSchema = new Schema({
     }
 }, { timestamps: true })
 
-BrandSchema.pre("save", () => {
+BrandSchema.pre("save", function () {
     if (!this.image.url) {
         this.image.url = `/files/${this.image.key}`;
     }
 });
 
-BrandSchema.pre("remove", () => {
+BrandSchema.pre("remove", function () {
     return promisify(fs.unlink)(
         path.resolve(__dirname, "..", "..", "tmp", "uploads", this.image.key)
     );
