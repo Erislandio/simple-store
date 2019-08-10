@@ -17,7 +17,9 @@ module.exports = {
 
             }
 
-            const newCAtegory = await Category.create(req.body) 
+            let nameFormated = name.replace(/ /g,"-").toLowerCase();
+
+            const newCAtegory = await Category.create({...req.body, name:nameFormated }) 
             return res.status(201).send(newCAtegory)
 
         } catch (error) {
