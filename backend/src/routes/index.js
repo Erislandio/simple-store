@@ -19,6 +19,7 @@ routes.get('/user', userController.getUserByEmail)
 
 // * Autenticação
 routes.post("/authenticate", authController.authenticate);
+routes.post("/login", authController.login);
 
 // * Category
 routes.post('/category', categoryController.store)
