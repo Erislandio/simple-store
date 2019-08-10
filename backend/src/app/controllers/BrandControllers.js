@@ -11,13 +11,12 @@ module.exports = {
             const brand = await Brand.findOne({ name: name.toLowerCase() })
 
             if (brand) {
-
                 return res.status(400).send({
                     code: 1,
                     message: "Brand already exists!"
                 })
-
             }
+
 
             let nameFormated = name.replace(/ /g, "-").toLowerCase();
 

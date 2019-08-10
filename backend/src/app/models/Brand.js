@@ -27,10 +27,16 @@ const BrandSchema = new Schema({
     }
 }, { timestamps: true })
 
-BrandSchema.pre("save", function() {
+BrandSchema.pre("save", function () {
     if (!this.image.url) {
-      this.image.url = `${process.env.APP_URL}/files/${this.image.key}`;
+        this.image.url = `/files/${this.image.key}`;
     }
-  });
+});
+
+BrandSchema.pre("remove", function () {
+    return promisify(fs.unlink)(
+        path.resolve(__dirname, "..", "..", "tmp", "uploads", this.image.key)
+    );
+});
 
 module.exports = model('Brand', BrandSchema)
