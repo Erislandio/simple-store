@@ -28,6 +28,5 @@ module.exports = {
         } catch (error) {
             return res.status(500).send(error, { error: true })
         }
-
     }
 }
