@@ -9,23 +9,22 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { secondaryListItems, mainListItems } from './listItem';
+import { mainListItems } from './listItem';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-const drawerWidth = 300;
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
     },
     toolbar: {
-        paddingRight: 24,
+        background: '#2c3e50'
     },
     toolbarIcon: {
         display: 'flex',
@@ -66,6 +65,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
+        height: '100vh',
     },
     drawerPaperClose: {
         overflowX: 'hidden',
@@ -96,22 +96,6 @@ const useStyles = makeStyles(theme => ({
     },
     fixedHeight: {
         height: 240,
-    },
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-
-    list: {
-        width: 250,
-    },
-    fullList: {
-        width: 'auto',
     },
 }));
 
@@ -151,13 +135,14 @@ export default function Index() {
                         <MenuIcon />
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
-          </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
+                        E-best
+                    </Typography>
+                    <PlayArrow 
+                         aria-label="account of current user"
+                         aria-controls="menu-appbar"
+                         aria-haspopup="true"
+                         color="inherit"
+                        />
                     <IconButton
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
@@ -167,6 +152,7 @@ export default function Index() {
                     >
                         <AccountCircle />
                     </IconButton>
+                   
                     <Menu
                         id="menu-appbar"
                         anchorEl={anchorEl}
@@ -202,7 +188,6 @@ export default function Index() {
                 <Divider />
                 <List>{mainListItems}</List>
                 <Divider />
-                <List>{secondaryListItems}</List>
             </Drawer>
         </div>
     );
