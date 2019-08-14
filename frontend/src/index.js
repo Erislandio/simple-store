@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import Dashboard from './components/Admin/Dashboard';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import SignUp from './components/signup/SignUp'
 import Login from './components/login/Login'
 import ForgotPass from './components/forgotpassword/ForgotPass'

@@ -137,12 +137,15 @@ export default function Index() {
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                         E-best
                     </Typography>
-                    <PlayArrow 
-                         aria-label="account of current user"
-                         aria-controls="menu-appbar"
-                         aria-haspopup="true"
-                         color="inherit"
-                        />
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                    >
+                         <PlayArrow />
+                    </IconButton>
+                   
                     <IconButton
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
